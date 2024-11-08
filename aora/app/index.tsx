@@ -4,9 +4,9 @@ import { Text, View } from 'react-native';
 
 const app = () => {
   return (
-    <View className='flex-1 items-center justify-center bg-white'>
-      <Text className='font-pbold text-2xl'>Aora!</Text>
-      <Link href='/profile'>Go to profile</Link>
+    <View className='items-center justify-center flex-1 bg-white'>
+      <Text className='text-2xl font-pbold'>Aora!</Text>
+      <Link href='/home'>Go to Home</Link>
       <StatusBar style='auto' />
     </View>
   );
