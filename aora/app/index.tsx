@@ -1,6 +1,6 @@
-import { Link, router } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { Image, ScrollView, Text, View } from 'react-native';
+import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { images } from '../constants';
@@ -49,6 +49,8 @@ const app = () => {
           />
         </View>
       </ScrollView>
+
+      <StatusBar backgroundColor='#161622' style='light' />
     </SafeAreaView>
   );
 };
