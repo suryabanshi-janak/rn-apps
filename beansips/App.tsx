@@ -24,6 +24,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import CustomIcon from './src/components/CustomIcon';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -80,6 +81,7 @@ function App(): React.JSX.Element {
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
           </Section>
+          <CustomIcon name="search" size={50} />
           <Section title="See Your Changes">
             <ReloadInstructions />
           </Section>
