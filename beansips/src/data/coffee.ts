@@ -1,4 +1,4 @@
-const CoffeeData = [
+export const coffeeData = [
   {
     id: 'C1',
     name: 'Americano',
@@ -378,4 +378,3 @@ const CoffeeData = [
     index: 17,
   },
 ];
-export default CoffeeData;
