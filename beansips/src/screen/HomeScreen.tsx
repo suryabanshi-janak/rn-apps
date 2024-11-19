@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   ScrollView,
@@ -46,7 +46,7 @@ const getCoffeeByCategory = (category: string, data: any) => {
   }
 };
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}: {navigation: any}) => {
   const coffee = useStore(store => store.coffee);
   const beans = useStore(store => store.beans);
 
@@ -60,6 +60,8 @@ const HomeScreen = () => {
   });
   const [categoryCoffee, setCategoryCoffee] = useState<CoffeeData[]>([]);
 
+  const coffeeListRef = useRef<FlatList>(null);
+
   useEffect(() => {
     const coffeeCategories = getCategories(coffee);
     setCategories(coffeeCategories);
@@ -67,7 +69,29 @@ const HomeScreen = () => {
     setCategoryCoffee(categorized);
   }, [coffee]);
 
+  const onCoffeeSearch = (search: string) => {
+    if (!search) return;
+
+    coffeeListRef.current?.scrollToOffset({
+      animated: true,
+      offset: 0,
+    });
+
+    setSelectedCategory({index: 0, name: 'All'});
+    setCategoryCoffee([
+      ...coffee.filter((item: any) =>
+        item.name.toLowerCase().includes(search.toLowerCase()),
+      ),
+    ]);
+  };
+
   const onResetSearch = () => {
+    coffeeListRef.current?.scrollToOffset({
+      animated: true,
+      offset: 0,
+    });
+    setSelectedCategory({index: 0, name: 'All'});
+    setCategoryCoffee([...coffee]);
     setSearchText('');
   };
 
@@ -83,12 +107,18 @@ const HomeScreen = () => {
 
         {/* SEARCH BAR */}
         <View style={styles.searchContainer}>
-          <CustomIcon
-            name="search"
-            size={FONTSIZE.size_18}
-            style={styles.searchIcon}
-            color={COLORS.primaryLightGreyHex}
-          />
+          <TouchableOpacity onPress={() => onCoffeeSearch(searchText)}>
+            <CustomIcon
+              name="search"
+              size={FONTSIZE.size_18}
+              style={styles.searchIcon}
+              color={
+                searchText
+                  ? COLORS.primaryOrangeHex
+                  : COLORS.primaryLightGreyHex
+              }
+            />
+          </TouchableOpacity>
           <TextInput
             placeholder="Search"
             placeholderTextColor={COLORS.primaryLightGreyHex}
@@ -118,7 +148,14 @@ const HomeScreen = () => {
               <TouchableOpacity
                 style={styles.categoryItem}
                 onPress={() => {
+                  coffeeListRef.current?.scrollToOffset({
+                    animated: true,
+                    offset: 0,
+                  });
                   setSelectedCategory({index, name: categories[index]});
+                  setCategoryCoffee([
+                    ...getCoffeeByCategory(categories[index], coffee),
+                  ]);
                 }}>
                 <Text
                   style={[
@@ -139,13 +176,21 @@ const HomeScreen = () => {
 
         {/* COFFEE */}
         <FlatList
+          ref={coffeeListRef}
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={item => item.id}
           data={categoryCoffee}
           contentContainerStyle={styles.flatlistContainer}
           renderItem={({item}) => (
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.push('Details', {
+                  index: item.index,
+                  id: item.id,
+                  type: item.type,
+                });
+              }}>
               <CoffeeCard {...item} />
             </TouchableOpacity>
           )}
@@ -163,7 +208,14 @@ const HomeScreen = () => {
             {marginBottom: tabBarHeight},
           ]}
           renderItem={({item}) => (
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.push('Details', {
+                  index: item.index,
+                  id: item.id,
+                  type: item.type,
+                });
+              }}>
               <CoffeeCard {...item} />
             </TouchableOpacity>
           )}
