@@ -1,3 +1,9 @@
+export interface CoffeePrice {
+  size: string;
+  price: string;
+  currency: string;
+}
+
 export interface CoffeeData {
   id: string;
   name: string;
@@ -7,11 +13,7 @@ export interface CoffeeData {
   imagelink_portrait: string;
   ingredients: string;
   special_ingredient: string;
-  prices: {
-    size: string;
-    price: string;
-    currency: string;
-  }[];
+  prices: CoffeePrice[];
   average_rating: number;
   ratings_count: string;
   favourite: boolean;
