@@ -2,6 +2,7 @@ export interface CoffeePrice {
   size: string;
   price: string;
   currency: string;
+  quantity?: number;
 }
 
 export interface CoffeeData {

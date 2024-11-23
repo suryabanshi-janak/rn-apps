@@ -19,6 +19,7 @@ import {Text} from 'react-native';
 import CustomIcon from './CustomIcon';
 
 type ImageBackgroundInfoProps = CoffeeData & {
+  onFavoritePress: () => void;
   onBackPress?: () => void;
 };
 
@@ -33,6 +34,7 @@ const ImageBackgroundInfo = ({
   ratings_count,
   roasted,
   onBackPress,
+  onFavoritePress,
 }: ImageBackgroundInfoProps) => {
   const isBean = type === 'Bean';
 
@@ -54,7 +56,7 @@ const ImageBackgroundInfo = ({
             <View />
           )}
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onFavoritePress}>
             <GradientBGIcon
               name="like"
               color={

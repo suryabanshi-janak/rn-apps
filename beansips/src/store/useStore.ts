@@ -13,7 +13,7 @@ interface Store {
   favorites: CoffeeData[];
   cartItems: any[];
   orderHistories: Order[];
-  addToCart: (cartItem: CoffeeData) => void;
+  addToCart: (cartItem: Partial<CoffeeData>) => void;
   calculateCartPrice: () => void;
   addToOrderHistoryFromCart: () => void;
   addToFavorite: (id: string, size: string) => void;

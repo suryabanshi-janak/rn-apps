@@ -26,6 +26,10 @@ const DetailsScreen = ({navigation, route}: any) => {
   const details = useStore(store => (isCoffee ? store.coffee : store.beans))[
     route.params.index
   ];
+  const addToCart = useStore(store => store.addToCart);
+  const calculateCartPrice = useStore(store => store.calculateCartPrice);
+  const addToFavorite = useStore(store => store.addToFavorite);
+  const deleteFromFavorite = useStore(store => store.deleteFromFavorite);
 
   const [viewFullDesc, setViewFullDesc] = useState<boolean>(false);
   const [price, setPrice] = useState<CoffeePrice>(details.prices[0]);
@@ -34,11 +38,38 @@ const DetailsScreen = ({navigation, route}: any) => {
     navigation.pop();
   };
 
+  const onToggleFavorite = () => {
+    if (details.favourite) {
+      deleteFromFavorite(details.type, details.id);
+    } else {
+      addToFavorite(details.type, details.id);
+    }
+  };
+
+  const onAddToCart = () => {
+    addToCart({
+      id: details.id,
+      index: details.index,
+      name: details.name,
+      roasted: details.roasted,
+      imagelink_square: details.imagelink_square,
+      special_ingredient: details.special_ingredient,
+      type: details.type,
+      prices: [{...price, quantity: 1}],
+    });
+    calculateCartPrice();
+    navigation.navigate('Cart');
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <ImageBackgroundInfo {...details} onBackPress={onBack} />
+        <ImageBackgroundInfo
+          {...details}
+          onBackPress={onBack}
+          onFavoritePress={onToggleFavorite}
+        />
 
         <View style={styles.descriptionContainer}>
           <Text style={styles.infoTitle}>Description</Text>
@@ -90,7 +121,7 @@ const DetailsScreen = ({navigation, route}: any) => {
         </View>
 
         <PaymentFooter
-          onButtonPress={() => {}}
+          onButtonPress={onAddToCart}
           buttonLabel="Add to Cart"
           price={price}
         />
