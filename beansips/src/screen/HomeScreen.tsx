@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -49,6 +50,8 @@ const getCoffeeByCategory = (category: string, data: any) => {
 const HomeScreen = ({navigation}: {navigation: any}) => {
   const coffee = useStore(store => store.coffee);
   const beans = useStore(store => store.beans);
+  const addToCart = useStore(store => store.addToCart);
+  const calculateCartPrice = useStore(store => store.calculateCartPrice);
 
   const tabBarHeight = useBottomTabBarHeight();
 
@@ -93,6 +96,25 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
     setSelectedCategory({index: 0, name: 'All'});
     setCategoryCoffee([...coffee]);
     setSearchText('');
+  };
+
+  const onAddToCart = (data: CoffeeData) => {
+    addToCart({
+      id: data.id,
+      index: data.index,
+      name: data.name,
+      roasted: data.roasted,
+      imagelink_square: data.imagelink_square,
+      special_ingredient: data.special_ingredient,
+      type: data.type,
+      prices: data.prices,
+    });
+    calculateCartPrice();
+    ToastAndroid.showWithGravity(
+      `${data.name} is added to cart`,
+      ToastAndroid.SHORT,
+      ToastAndroid.CENTER,
+    );
   };
 
   return (
@@ -191,7 +213,7 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
                   type: item.type,
                 });
               }}>
-              <CoffeeCard {...item} />
+              <CoffeeCard {...item} onAddToCart={() => onAddToCart(item)} />
             </TouchableOpacity>
           )}
         />
@@ -216,7 +238,7 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
                   type: item.type,
                 });
               }}>
-              <CoffeeCard {...item} />
+              <CoffeeCard {...item} onAddToCart={() => onAddToCart(item)} />
             </TouchableOpacity>
           )}
         />

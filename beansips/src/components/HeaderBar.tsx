@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import {COLORS, FONTSIZE, SPACING} from '../theme/theme';
+import {COLORS, FONTFAMILY, FONTSIZE, SPACING} from '../theme/theme';
 import ProfilePic from './ProfilePic';
 import GradientBGIcon from './GradientBGIcon';
 
@@ -30,6 +30,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   headerText: {
+    fontFamily: FONTFAMILY.poppins_semibold,
+    fontSize: FONTSIZE.size_20,
     color: COLORS.primaryWhiteHex,
   },
 });

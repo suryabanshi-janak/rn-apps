@@ -19,7 +19,9 @@ import {
 import CustomIcon from './CustomIcon';
 import BGIcon from './BGIcon';
 
-type CoffeeCardProps = Partial<CoffeeData>;
+type CoffeeCardProps = Partial<CoffeeData> & {
+  onAddToCart: () => void;
+};
 
 const CARD_WIDTH = Dimensions.get('window').width * 0.32;
 
@@ -29,6 +31,7 @@ const CoffeeCard = ({
   name,
   special_ingredient,
   prices,
+  onAddToCart,
 }: CoffeeCardProps) => {
   return (
     <LinearGradient
@@ -53,7 +56,7 @@ const CoffeeCard = ({
       <Text style={styles.subtitle}>{special_ingredient}</Text>
       <View style={styles.footer}>
         <Text style={styles.price}>$ {prices?.[2].price}</Text>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={onAddToCart}>
           <BGIcon
             name="add"
             color={COLORS.primaryWhiteHex}
