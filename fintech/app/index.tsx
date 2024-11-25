@@ -10,7 +10,7 @@ const Page = () => {
 
   return (
     <View style={styles.container}>
-      {assets && (
+      {/* {assets && (
         <Video
           resizeMode={ResizeMode.COVER}
           isMuted
@@ -19,7 +19,7 @@ const Page = () => {
           source={{ uri: assets[0].uri }}
           style={styles.video}
         />
-      )}
+      )} */}
       <View style={{ marginTop: 80, padding: 20 }}>
         <Text style={styles.header}>Ready to change the way you money?</Text>
       </View>
