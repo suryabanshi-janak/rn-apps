@@ -1,6 +1,6 @@
 import Colors from '@/constants/Colors';
 import { defaultStyles } from '@/constants/Styles';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
   View,
@@ -11,7 +11,20 @@ import {
 } from 'react-native';
 
 const SignUpPage = () => {
+  const router = useRouter();
+
   const [phoneNumber, setPhoneNumber] = useState<string>('');
+
+  const onSignUp = () => {
+    const fullNumber = `+977${phoneNumber}`;
+
+    try {
+      router.push({
+        pathname: '/verify/[phone]',
+        params: { phone: fullNumber },
+      });
+    } catch (error) {}
+  };
 
   return (
     <View style={defaultStyles.container}>
@@ -48,6 +61,7 @@ const SignUpPage = () => {
           phoneNumber ? styles.enabled : styles.disabled,
           { marginBottom: 20 },
         ]}
+        onPress={onSignUp}
       >
         <Text style={defaultStyles.buttonText}>Sign Up</Text>
       </TouchableOpacity>

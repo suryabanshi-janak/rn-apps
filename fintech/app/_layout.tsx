@@ -45,6 +45,14 @@ const InitialLayout = () => {
           ),
         }}
       />
+      <Stack.Screen
+        name='verify/[phone]'
+        options={{
+          title: '',
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: Colors.background },
+        }}
+      />
 
       <Stack.Screen
         name='help'
