@@ -1,27 +1,28 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Link, useLocalSearchParams } from 'expo-router';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   CodeField,
   Cursor,
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import {
+  isClerkAPIResponseError,
+  useSignIn,
+  useSignUp,
+} from '@clerk/clerk-expo';
 
 import { defaultStyles } from '@/constants/Styles';
 import Colors from '@/constants/Colors';
+import { Alert } from 'react-native';
 
 const CELL_COUNT = 6;
 
 const PhoneVerificationPage = () => {
-  const { phone } = useLocalSearchParams();
-  console.log('🚀 ~ PhoneVerificationPage ~ phone:', phone);
+  const { email, signin } = useLocalSearchParams();
+  const { signIn } = useSignIn();
+  const { signUp, setActive, isLoaded: isSignupLoaded } = useSignUp();
 
   const [code, setCode] = useState('second');
 
@@ -31,11 +32,52 @@ const PhoneVerificationPage = () => {
     setValue: setCode,
   });
 
+  useEffect(() => {
+    if (code.length === 6) {
+      if (signin === 'true') {
+        verifySignIn();
+      } else {
+        verifyCode();
+      }
+    }
+  }, [code]);
+
+  const verifyCode = async () => {
+    if (!isSignupLoaded) return;
+
+    try {
+      await signUp.attemptEmailAddressVerification({
+        code,
+      });
+      await setActive({ session: signUp.createdSessionId });
+    } catch (err) {
+      console.log('error', JSON.stringify(err, null, 2));
+      if (isClerkAPIResponseError(err)) {
+        Alert.alert('Error', err.errors[0].message);
+      }
+    }
+  };
+
+  const verifySignIn = async () => {
+    try {
+      await signIn!.attemptFirstFactor({
+        strategy: 'phone_code',
+        code,
+      });
+      await setActive!({ session: signIn!.createdSessionId });
+    } catch (err) {
+      console.log('error', JSON.stringify(err, null, 2));
+      if (isClerkAPIResponseError(err)) {
+        Alert.alert('Error', err.errors[0].message);
+      }
+    }
+  };
+
   return (
     <View style={defaultStyles.container}>
       <Text style={defaultStyles.header}>6-digit code</Text>
       <Text style={defaultStyles.descriptionText}>
-        Code sent to {phone} unless you already have an account
+        Code sent to {email} unless you already have an account
       </Text>
 
       <CodeField
