@@ -26,7 +26,8 @@ const Page = () => {
 
       <View style={styles.buttons}>
         <Link
-          href={'/login'}
+          // href={'/login'}
+          href={'/(authenticated)/(tabs)/home'}
           style={[
             defaultStyles.pillButton,
             { flex: 1, backgroundColor: Colors.dark },

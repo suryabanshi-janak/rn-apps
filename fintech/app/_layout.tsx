@@ -52,7 +52,7 @@ const InitialLayout = () => {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
-  const isSignedIn = true;
+  const isSignedIn = false;
 
   useEffect(() => {
     if (loaded) {
@@ -119,6 +119,11 @@ const InitialLayout = () => {
       <Stack.Screen
         name='help'
         options={{ title: 'Help', presentation: 'modal' }}
+      />
+
+      <Stack.Screen
+        name='(authenticated)/(tabs)'
+        options={{ headerShown: false }}
       />
     </Stack>
   );
