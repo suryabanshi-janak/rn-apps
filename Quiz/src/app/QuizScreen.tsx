@@ -42,6 +42,7 @@ const QuizScreen = () => {
           <>
             <LottieView
               autoPlay
+              loop={false}
               style={StyleSheet.absoluteFill}
               source={require('../../assets/party.json')}
             />
