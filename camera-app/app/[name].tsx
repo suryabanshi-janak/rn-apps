@@ -1,8 +1,17 @@
-import { Link, Stack, useLocalSearchParams } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { Image, StyleSheet, View } from 'react-native';
+import * as FileSystem from 'expo-file-system';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const ImageScreen = () => {
   const { name } = useLocalSearchParams<{ name: string }>();
+
+  const fullUri = FileSystem.documentDirectory + name;
+
+  const onDelete = async () => {
+    await FileSystem.deleteAsync(fullUri);
+    router.back();
+  };
 
   return (
     <View
@@ -12,16 +21,33 @@ const ImageScreen = () => {
         justifyContent: 'center',
       }}
     >
-      <Stack.Screen options={{ title: name }} />
-      <Text style={{ textAlign: 'center', fontWeight: '500', fontSize: 20 }}>
-        ImageScreen: {name}
-      </Text>
+      <Stack.Screen
+        options={{
+          title: 'Media',
+          // headerTitleAlign: 'center',
+          headerRight: () => (
+            <View style={{ flexDirection: 'row', gap: 5 }}>
+              <MaterialIcons
+                name='delete'
+                size={26}
+                color='crimson'
+                onPress={onDelete}
+              />
+              <MaterialIcons
+                name='save'
+                size={26}
+                color='dimgray'
+                onPress={() => {}}
+              />
+            </View>
+          ),
+        }}
+      />
 
-      <Link href='/' asChild>
-        <Pressable>
-          <Text>Home</Text>
-        </Pressable>
-      </Link>
+      <Image
+        source={{ uri: fullUri }}
+        style={{ width: '100%', height: '100%' }}
+      />
     </View>
   );
 };

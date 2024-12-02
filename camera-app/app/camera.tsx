@@ -1,27 +1,143 @@
-import { Link } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import {
+  ActivityIndicator,
+  Button,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {
+  CameraCapturedPicture,
+  CameraType,
+  CameraView,
+  useCameraPermissions,
+} from 'expo-camera';
+import { MaterialIcons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import * as FileSystem from 'expo-file-system';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import path from 'path';
 
 const CameraScreen = () => {
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Text style={{ textAlign: 'center', fontWeight: '500', fontSize: 20 }}>
-        CameraScreen
-      </Text>
+  const [permission, requestPermission] = useCameraPermissions();
 
-      <Link href='/' asChild>
-        <Pressable>
-          <Text>Home</Text>
-        </Pressable>
-      </Link>
+  const [picture, setPicture] = useState<CameraCapturedPicture>();
+  const [facing, setFacing] = useState<CameraType>('back');
+  const camera = useRef<CameraView>(null);
+
+  useEffect(() => {
+    if (permission && !permission?.granted && permission?.canAskAgain) {
+      requestPermission();
+    }
+  }, [permission]);
+
+  const toggleFacing = () => {
+    setFacing((current) => (current === 'back' ? 'front' : 'back'));
+  };
+
+  const onTakePicture = async () => {
+    const res = await camera.current?.takePictureAsync();
+    setPicture(res);
+  };
+
+  const saveFile = async (uri: string) => {
+    const filename = path.parse(uri).base;
+
+    await FileSystem.copyAsync({
+      from: uri,
+      to: FileSystem.documentDirectory + filename,
+    });
+    setPicture(undefined);
+
+    router.back();
+  };
+
+  if (!permission) {
+    return <ActivityIndicator />;
+  }
+
+  if (picture) {
+    return (
+      <View>
+        <Image source={{ uri: picture.uri }} style={styles.image} />
+        <View
+          style={{
+            padding: 10,
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+          }}
+        >
+          <SafeAreaView edges={['bottom']}>
+            <Button title='Save' onPress={() => saveFile(picture.uri)} />
+          </SafeAreaView>
+        </View>
+        <MaterialIcons
+          name='close'
+          size={30}
+          color='white'
+          style={styles.close}
+          onPress={() => setPicture(undefined)}
+        />
+      </View>
+    );
+  }
+
+  return (
+    <View>
+      <CameraView ref={camera} style={styles.camera} facing={facing}>
+        <View style={styles.footer}>
+          <View />
+          <Pressable style={styles.recordButton} onPress={onTakePicture} />
+          <MaterialIcons
+            name='flip-camera-ios'
+            size={30}
+            color='white'
+            onPress={toggleFacing}
+          />
+        </View>
+      </CameraView>
+
+      <MaterialIcons
+        name='close'
+        size={30}
+        color='white'
+        style={styles.close}
+        onPress={() => router.back()}
+      />
     </View>
   );
 };
 export default CameraScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  camera: {
+    height: '100%',
+    width: '100%',
+  },
+  footer: {
+    marginTop: 'auto',
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#00000099',
+    flexDirection: 'row',
+  },
+  recordButton: {
+    height: 50,
+    width: 50,
+    backgroundColor: 'white',
+    borderRadius: 100,
+  },
+  close: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+  },
+  image: {
+    height: '100%',
+    width: '100%',
+  },
+});
