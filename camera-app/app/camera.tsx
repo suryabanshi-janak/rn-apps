@@ -5,7 +5,6 @@ import {
   Image,
   Pressable,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import {
@@ -25,6 +24,9 @@ const CameraScreen = () => {
 
   const [picture, setPicture] = useState<CameraCapturedPicture>();
   const [facing, setFacing] = useState<CameraType>('back');
+  const [isRecording, setIsRecording] = useState<boolean>(false);
+  const [video, setVideo] = useState<string>();
+
   const camera = useRef<CameraView>(null);
 
   useEffect(() => {
@@ -37,9 +39,25 @@ const CameraScreen = () => {
     setFacing((current) => (current === 'back' ? 'front' : 'back'));
   };
 
-  const onTakePicture = async () => {
+  const onPress = () => {
+    if (isRecording) {
+      camera.current?.stopRecording();
+    } else {
+      takePicture();
+    }
+  };
+
+  const takePicture = async () => {
     const res = await camera.current?.takePictureAsync();
     setPicture(res);
+  };
+
+  const startRecording = async () => {
+    setIsRecording(true);
+    const res = await camera.current?.recordAsync({ maxDuration: 3 });
+    console.log(res);
+    setVideo(res?.uri);
+    setIsRecording(false);
   };
 
   const saveFile = async (uri: string) => {
@@ -90,7 +108,14 @@ const CameraScreen = () => {
       <CameraView ref={camera} style={styles.camera} facing={facing}>
         <View style={styles.footer}>
           <View />
-          <Pressable style={styles.recordButton} onPress={onTakePicture} />
+          <Pressable
+            style={[
+              styles.recordButton,
+              { backgroundColor: isRecording ? 'crimson' : 'white' },
+            ]}
+            onPress={onPress}
+            onLongPress={startRecording}
+          />
           <MaterialIcons
             name='flip-camera-ios'
             size={30}
