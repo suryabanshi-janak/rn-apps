@@ -10,6 +10,9 @@ import {
   PersonalInfoSchema,
   useCheckoutForm,
 } from '../../contexts/CheckoutFormProvider';
+import CustomPicker from '../../components/CustomPicker';
+import countries from '../../../assets/countries.json';
+import CustomDateTimePicker from '../../components/CustomDateTimePicker';
 
 export default function PersonalDetailsForm() {
   const { setPersonalInfo, personalInfo } = useCheckoutForm();
@@ -53,12 +56,23 @@ export default function PersonalDetailsForm() {
           />
         </View>
 
+        <CustomPicker
+          name='country'
+          placeholder={{ label: 'Select country' }}
+          items={countries.map((country) => ({
+            label: country.name,
+            value: country.code,
+          }))}
+        />
+
         <CustomTextInput
           name='phone'
           label='Phone number'
           placeholder='601234123123'
           inputMode='tel'
         />
+
+        <CustomDateTimePicker name='birthdate' />
 
         <CustomButton
           title='Next'
