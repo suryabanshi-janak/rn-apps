@@ -1,11 +1,12 @@
-import { Link, useLocalSearchParams } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import { StyleSheet } from 'react-native';
+import { Text, View } from '@/components/general/Themed';
 
 const WorkoutScreen = () => {
   const { id } = useLocalSearchParams();
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Text>Workout id: {id}</Text>
     </View>
   );
