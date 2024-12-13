@@ -12,6 +12,7 @@ import { useWorkouts } from '@/store';
 export default function CurrentWorkoutScreen() {
   const currentWorkout = useWorkouts((state) => state.currentWorkout);
   const finishWorkout = useWorkouts((state) => state.finishWorkout);
+  const addExercise = useWorkouts((state) => state.addExercise);
 
   const headerHeight = useHeaderHeight();
 
@@ -43,7 +44,9 @@ export default function CurrentWorkoutScreen() {
           renderItem={({ item }) => <WorkoutExerciseItem exercise={item} />}
           ListHeaderComponent={<WorkoutHeader />}
           ListFooterComponent={
-            <SelectExerciseModal onSelectExercise={(name: string) => {}} />
+            <SelectExerciseModal
+              onSelectExercise={(name: string) => addExercise(name)}
+            />
           }
         />
       </KeyboardAvoidingView>
