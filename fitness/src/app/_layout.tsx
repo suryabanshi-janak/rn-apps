@@ -6,9 +6,15 @@ import {
   DefaultTheme,
 } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useDrizzleStudio } from 'expo-drizzle-studio-plugin';
+import * as SQLite from 'expo-sqlite';
+import { dbName } from '@/db';
+
+const db = SQLite.openDatabaseSync(dbName);
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  useDrizzleStudio(db);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
