@@ -9,6 +9,7 @@ import {
   getExerciseTotalWeight,
 } from '@/services/exerciseService';
 import * as Crypto from 'expo-crypto';
+import { getCurrentWorkout, getWorkouts, saveWorkout } from '@/db/workouts';
 // import { getCurrentWorkout, getWorkouts, saveWorkout } from '@/db/workouts';
 // import { getExercises } from '@/db/exercises';
 
@@ -28,7 +29,7 @@ export const newWorkout = () => {
   };
 
   // save to database
-  // saveWorkout(newWorkout);
+  saveWorkout(newWorkout);
 
   return newWorkout;
 };
@@ -41,7 +42,7 @@ export const finishWorkout = (workout: WorkoutWithExercises) => {
     finishedAt: new Date(),
   };
 
-  // saveWorkout(finishedWorkout);
+  saveWorkout(finishedWorkout);
 
   return finishedWorkout;
 };
@@ -69,19 +70,25 @@ export const cleanWorkout = (workout: WorkoutWithExercises) => {
 //   };
 // };
 
-// export const getCurrentWorkoutWithExercises =
-//   async (): Promise<WorkoutWithExercises | null> => {
-//     const workout = await getCurrentWorkout();
-//     if (workout) {
-//       return await addExercisesToWorkout(workout);
-//     }
-//     return null;
-//   };
+export const getCurrentWorkoutWithExercises =
+  async (): Promise<WorkoutWithExercises | null> => {
+    const workout = await getCurrentWorkout();
+    if (workout) {
+      return {
+        ...workout,
+        exercises: [],
+      };
+    }
+    return null;
+  };
 
-// export const getWorkoutsWithExercises = async (): Promise<
-//   WorkoutWithExercises[]
-// > => {
-//   const workouts = await getWorkouts();
+export const getWorkoutsWithExercises = async (): Promise<
+  WorkoutWithExercises[]
+> => {
+  const workouts = await getWorkouts();
 
-//   return await Promise.all(workouts.map(addExercisesToWorkout));
-// };
+  return workouts.map((workout) => ({
+    ...workout,
+    exercises: [],
+  }));
+};
