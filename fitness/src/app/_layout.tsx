@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 
 const db = SQLite.openDatabaseSync(dbName);
 
-getDB();
+// getDB();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
