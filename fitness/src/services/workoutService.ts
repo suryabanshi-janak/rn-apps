@@ -4,6 +4,7 @@ import {
   WorkoutWithExercises,
 } from '@/types/models';
 import {
+  addSetsToExercise,
   // addSetsToExercise,
   cleanExercise,
   getExerciseTotalWeight,
@@ -63,8 +64,7 @@ const addExercisesToWorkout = async (
   workout: Workout
 ): Promise<WorkoutWithExercises> => {
   const exercises = await getExercises(workout.id);
-  // const exercisesWithSets = await Promise.all(exercises.map(addSetsToExercise));
-  const exercisesWithSets = exercises.map((e) => ({ ...e, sets: [] }));
+  const exercisesWithSets = await Promise.all(exercises.map(addSetsToExercise));
 
   return {
     ...workout,

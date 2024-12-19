@@ -2,6 +2,7 @@ import { Exercise, ExerciseWithSets } from '@/types/models';
 import { cleanSets, createSet, getSetTotalWeight } from '@/services/setService';
 import * as Crypto from 'expo-crypto';
 import { deleteExercise, saveExercise } from '@/db/exercises';
+import { getSets } from '@/db/sets';
 // import { getSets } from '@/db/sets';
 
 export const getExerciseTotalWeight = (exercise: ExerciseWithSets) => {
@@ -42,13 +43,13 @@ export const cleanExercise = (exercise: ExerciseWithSets) => {
   };
 };
 
-// export const addSetsToExercise = async (
-//   exercise: Exercise
-// ): Promise<ExerciseWithSets> => {
-//   const sets = await getSets(exercise.id);
+export const addSetsToExercise = async (
+  exercise: Exercise
+): Promise<ExerciseWithSets> => {
+  const sets = await getSets(exercise.id);
 
-//   return {
-//     ...exercise,
-//     sets,
-//   };
-// };
+  return {
+    ...exercise,
+    sets,
+  };
+};

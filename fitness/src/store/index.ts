@@ -14,6 +14,7 @@ import {
 } from '@/services/workoutService';
 import { createExercise } from '@/services/exerciseService';
 import { createSet, updateSet } from '@/services/setService';
+import { deleteSet } from '@/db/sets';
 
 type State = {
   currentWorkout: WorkoutWithExercises | null;
@@ -117,7 +118,7 @@ export const useWorkouts = create<State & Actions>()(
     },
 
     deleteSet: (setId) => {
-      // deleteSet(setId);
+      deleteSet(setId);
       set(({ currentWorkout }) => {
         if (!currentWorkout) {
           return;
