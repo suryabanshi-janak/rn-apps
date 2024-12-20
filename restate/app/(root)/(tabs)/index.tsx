@@ -10,9 +10,7 @@ export default function Index() {
         alignItems: 'center',
       }}
     >
-      <Text className='text-lg font-bold'>
-        Edit app/index.tsx to edit this screen.
-      </Text>
+      <Text className='text-3xl font-rubik'>Welcome there!</Text>
 
       <Link href='/sign-in' className='mt-4 text-xl'>
         Sign In
